@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <button onclick="logout()">Logout</button>
+        <h2>Register User</h2>
+        <form id="registerForm">
+            <input type="text" id="newUsername" placeholder="Username" required>
+            <input type="password" id="newPassword" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+        <h2>Post Content</h2>
+        <form id="postForm">
+            <textarea id="postContent" placeholder="Write something..." required></textarea>
+            <input type="file" id="postVideo" accept="video/*">
+            <input type="file" id="postAudio" accept="audio/*">
+            <button type="submit">Post</button>
+        </form>
+        <div id="posts"></div>
+    </div>
+    <script>
+        async function logout() {
+            window.location.href = '/';
+        }
+        
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: newUsername, password: newPassword, role: 'student' })
+            });
+
+            if (response.ok) {
+                alert('User registered successfully!');
+            } else {
+                alert('Failed to register user.');
+            }
+        });
+
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('postContent').value;
+
+            const response = await fetch('/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content })
+            });
+
+            if (response.ok) {
+                alert('Post created successfully!');
+            } else {
+                alert('Failed to create post.');
+            }
+        });
+    </script>
+</body>
+</html>
